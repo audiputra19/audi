@@ -1,0 +1,50 @@
+<?php
+
+	$username = "root"; //mysql username
+	$password = "B0r0k0k0K_"; //mysql password
+	$hostname = "localhost"; //hostname
+	$database = 'sarandi_dbo'; //databasename
+	//connect to databaset
+	$conn = new mysqli($hostname,$username,$password,$database);
+	
+	$data = mysqli_query($conn,"SELECT * FROM fooddata");
+	$product=array();
+	while($dt_data=mysqli_fetch_array($data)){
+		if($dt_data[rating]=='5.0'){
+			$item = "popular";
+		} else if($dt_data[rating] < '5.0' && $dt_data[rating] >= '4.0') {
+			$item = "recommended";
+		} else {
+			$item = "othermenu";
+		}
+		
+		$name = $dt_data['name'];
+		$image = $dt_data['image'];
+		$rating = $dt_data['rating'];
+		$delivery_time = $dt_data['delivery_time'];
+		$delivery_charges = $dt_data['delivery_charges'];
+		$price = $dt_data['price'];
+		$note = $dt_data['note'];
+		
+		$post_data = array(
+		  $item => array(
+			$list[] =array(
+			'name' => $name,
+			'imageUrl' => $image,
+			'rating' => $rating,
+			'deliveryTime' => $delivery_time,
+			'deliveryCharges' => $delivery_charges,
+			'price' => $price,
+			'note' => $note
+			)
+		  )
+		);
+		
+		array_push($product,$post_data);
+	}
+	
+	
+	header('Content-Type: application/json');
+	echo json_encode($product, JSON_PRETTY_PRINT);
+
+?>
